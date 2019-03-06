@@ -1,9 +1,17 @@
+# xzoom with mouse follow feature
 This is a fork of the xzoom program.
 I quickly patched the feature to follow the mouse and made it the default behaviour.
 Works great with a window manager.
 
-The following is the original readme:
+# To build
+xmkmf # provided by the imake package of arch-linux
+make
 
+# Sources:
+xzoom from: http://webdiis.unizar.es/pub/unix/X11/xzoom-0.3.tgz
+Applied the follow patch: ftp://ftp.acc.umu.se/mirror/cdimage/snapshot/Debian/pool/main/x/xzoom/xzoom_0.3-23.diff.gz
+
+# The following is the original readme:
 This is xzoom 0.3.
 
 I got a few letters from people who tried xzoom-0.1.
