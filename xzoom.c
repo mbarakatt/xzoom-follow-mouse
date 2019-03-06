@@ -26,10 +26,12 @@ Markus F.X.J. Oberhumer   Version 0.4, Feb. 18 1998
                           optimized scaling routines
                           use memcpy() instead of memmove() ;-)
                           some other minor changes/fixes
-tony mancill		2002/02/13 <tmancill@debian.org>       
+tony mancill		2002/02/13 <tmancill@debian.org>
 			hacked in support for WM_DELETE_WINDOW
 */
 
+#include <assert.h>
+#include <malloc.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -116,8 +118,8 @@ int created_images = False;
 #define NDELAYS 5
 
 int delays[NDELAYS] = { 200000, 100000, 50000, 10000, 0 };
-int delay_index = 0;
-int delay = 200000;			/* 0.2 second between updates */
+int delay_index = 2;
+int delay = 50000;			/* 0.05 second between updates */
 
 void
 timeout_func(int signum) {
@@ -317,9 +319,46 @@ void scale32(void)
 #undef T
 }
 
+static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
+    fprintf(stderr, "An error occured detecting the mouse position\n");
+    return True;
+}
 
 int
 main(int argc, char **argv) {
+    int number_of_screens;
+    int i;
+    Bool result;
+    Window *root_windows;
+    Window window_returned;
+    int root_x, root_y;
+    int win_x, win_y;
+    unsigned int mask_return;
+
+    Display *display = XOpenDisplay(NULL);
+    assert(display);
+    XSetErrorHandler(_XlibErrorHandler);
+    number_of_screens = XScreenCount(display);
+    fprintf(stderr, "There are %d screens available in this X session\n", number_of_screens);
+    root_windows = malloc(sizeof(Window) * number_of_screens);
+    for (i = 0; i < number_of_screens; i++) {
+        root_windows[i] = XRootWindow(display, i);
+    }
+    for (i = 0; i < number_of_screens; i++) {
+        result = XQueryPointer(display, root_windows[i], &window_returned,
+                &window_returned, &root_x, &root_y, &win_x, &win_y,
+                &mask_return);
+        if (result == True) {
+            break;
+        }
+    }
+    if (result != True) {
+        fprintf(stderr, "No mouse found.\n");
+        return -1;
+    }
+    printf("Mouse is at (%d,%d)\n", root_x, root_y);
+
+	//
 	XSetWindowAttributes xswa;
 	XEvent event;
 	int buttonpressed = False;
@@ -332,6 +371,21 @@ main(int argc, char **argv) {
 	    dest_geom_mask = NoValue,
 	    copy_from_src_mask;
 	int xpos = 0, ypos = 0;
+
+	//printf(xgetmouse());
+	/* FILE *fp; */
+    /* char *command; */
+	/* char *output; */
+	/* command = "xdotool getmouselocation"; */
+    /* /1* command contains the command string (a character array) *1/ */
+
+    /* /1* If you want to read output from command *1/ */
+    /* fp = popen(command,"r"); */
+         /* /1* read output from command *1/ */
+          /* fscanf(fp,"%s", output);   /1* or other STDIO input functions *1/ */
+	/* printf("Read string %s", output); */
+
+    /* fclose(fp); */
 
 	atexit(destroy_images);
 	progname = strrchr(argv[0], '/');
@@ -525,14 +579,14 @@ main(int argc, char **argv) {
 			(unsigned char *)progname, strlen(progname));
 	*/
 
-	
+
  	/***	20020213
 		code added by <tmancill@debian.org> to handle
-		window manager "close" event 
+		window manager "close" event
 	***/
 	wm_delete_window = XInternAtom (dpy, "WM_DELETE_WINDOW", False);
-	wm_protocols = XInternAtom(dpy, "WM_PROTOCOLS", False);                  
-        status = XSetWMProtocols(dpy, win, &wm_delete_window, 1);                   
+	wm_protocols = XInternAtom(dpy, "WM_PROTOCOLS", False);
+        status = XSetWMProtocols(dpy, win, &wm_delete_window, 1);
 
 	set_title = True;
 
@@ -582,13 +636,28 @@ main(int argc, char **argv) {
 
 	for(;;) {
 
+		for (i = 0; i < number_of_screens; i++) {
+			result = XQueryPointer(display, root_windows[i], &window_returned,
+					&window_returned, &root_x, &root_y, &win_x, &win_y,
+					&mask_return);
+			if (result == True) {
+				break;
+			}
+		}
+		if (result != True) {
+			fprintf(stderr, "No mouse found.\n");
+			return -1;
+		}
+		//printf("Mouse is at (%d,%d)\n", root_x, root_y);
+		xgrab = root_x - width[SRC]/2;
+		ygrab = root_y - height[SRC]/2;
 		/*****
 		old event loop updated to support WM messages
 		while(unmapped?
 			(XWindowEvent(dpy, win, (long)-1, &event), 1):
 			XCheckWindowEvent(dpy, win, (long)-1, &event)) {
 		******/
-		
+
 		while(XPending(dpy)) {
 			XNextEvent(dpy, &event);
 			switch(event.type) {
@@ -757,6 +826,8 @@ main(int argc, char **argv) {
 					break;
 
 				case 'q':
+					free(root_windows);
+					XCloseDisplay(display);
 					exit(0);
 					break;
 				}
