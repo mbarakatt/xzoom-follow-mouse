@@ -1,9 +1,9 @@
 .\" xzoom.man
 .\" Copyright Itai Nahshon
 .\"
-.TH XZOOM 1X
+.TH XZOOM 1x
 .SH NAME
-xzoom \- 
+xzoom \- magnify part of the screen, with fast updates
 .SH SYNOPSIS
 .B xzoom
 [ \-display \fIdisplayname\fP ] [ \-mag \fImag\fP [ \fImag\fP ] ]
@@ -18,7 +18,7 @@ The name of the display to use
 .TP 5
 .B \-mag \fImag\fP [ \fImag\fP ]
 What magnification to use. If two number arguments are supplied the
-first is used for X magniications and the second is used for Y magnification.
+first is used for X magnifications and the second is used for Y magnification.
 Magnification should be greater than 0.
 .TP 5
 .B \-x
@@ -85,6 +85,9 @@ key is pressed the zoomed area will scroll 10 pixels.
 sets the delay between frame updates. 
 Built-in delays are 200, 100, 50, 10 and 0 ms.
 .TP 5
+.B g
+toggle grid on and off.
+.TP 5
 .B Mouse buttons
 To set the location of the magnified are click the left mouse
 button inside xzoom's window and then move it (keep the button
@@ -145,11 +148,6 @@ delays would feel like poor response to user commands.
 For best performance the shared memory extension for X11 is
 used. Xzoom will fail if it is compiled to use XSHM and its
 display is not on the local host.
-.LP 5
-\(dg
-The Ximage data is accessed directly, in a way which may
-not be portable. Xzoom will not run with display depth other
-than 8 bits per pixel.
 .LP 5
 \(dg
 Xzoom is given with no warranty. It was tested only under

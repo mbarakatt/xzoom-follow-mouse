@@ -15,11 +15,11 @@ XCOMM DEFINES = -DFRAME -DXSHM -DTIMER -DNO_USLEEP
 
 DEFINES = -DFRAME -DXSHM
 
-LOCAL_LIBRARIES = -lXext -lX11
+LOCAL_LIBRARIES = -lXext -lX11 -lXt
 
 NAME = xzoom
 
-BINDIR = /usr/local/bin
-MANPATH = /usr/local/man
+BINDIR = /usr/bin
+MANPATH = /usr/share/man
 
 SimpleProgramTarget($(NAME))
