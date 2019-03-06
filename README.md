@@ -13,6 +13,8 @@ make
 xzoom from: http://webdiis.unizar.es/pub/unix/X11/xzoom-0.3.tgz
 Applied the follow patch: ftp://ftp.acc.umu.se/mirror/cdimage/snapshot/Debian/pool/main/x/xzoom/xzoom_0.3-23.diff.gz
 
+To do this I read the pkgbuild file here: https://aur.archlinux.org/packages/xzoom/
+
 # The following is the original readme:
 This is xzoom 0.3.
 
