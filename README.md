@@ -4,8 +4,10 @@ I quickly patched the feature to follow the mouse and made it the default behavi
 Works great with a window manager.
 
 # To build
+```bash
 xmkmf # provided by the imake package of arch-linux
 make
+```
 
 # Sources:
 xzoom from: http://webdiis.unizar.es/pub/unix/X11/xzoom-0.3.tgz
