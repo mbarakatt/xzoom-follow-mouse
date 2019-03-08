@@ -15,6 +15,9 @@ Applied the follow patch: ftp://ftp.acc.umu.se/mirror/cdimage/snapshot/Debian/po
 
 To do this I read the pkgbuild file here: https://aur.archlinux.org/packages/xzoom/
 
+# License
+Refence to the original license contained in : http://webdiis.unizar.es/pub/unix/X11/xzoom-0.3.tgz
+
 # The following is the original readme:
 This is xzoom 0.3.
 
