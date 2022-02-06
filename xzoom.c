@@ -26,8 +26,9 @@ Markus F.X.J. Oberhumer   Version 0.4, Feb. 18 1998
                           optimized scaling routines
                           use memcpy() instead of memmove() ;-)
                           some other minor changes/fixes
-tony mancill		2002/02/13 <tmancill@debian.org>
-			hacked in support for WM_DELETE_WINDOW
+tony mancill              2002/02/13 <tmancill@debian.org>
+                          hacked in support for WM_DELETE_WINDOW
+Maxime Barakatt           2022-02-06 Default behaviour is to follow mouse
 */
 
 #include <assert.h>
@@ -320,7 +321,7 @@ void scale32(void)
 }
 
 static int _XlibErrorHandler(Display *display, XErrorEvent *event) {
-    fprintf(stderr, "An error occured detecting the mouse position\n");
+    fprintf(stderr, "An error occured detecting the mouse position\nThis error might simply be due because xzoom cannot refresh if your cursor is already to close to the edge of the screen\n");
     return True;
 }
 
@@ -648,9 +649,10 @@ main(int argc, char **argv) {
 			fprintf(stderr, "No mouse found.\n");
 			return -1;
 		}
-		//printf("Mouse is at (%d,%d)\n", root_x, root_y);
+		printf("Mouse is at (%d,%d)\n", root_x, root_y);
 		xgrab = root_x - width[SRC]/2;
 		ygrab = root_y - height[SRC]/2;
+		printf("Xgrab is at (%d,%d)\n", xgrab, ygrab);
 		/*****
 		old event loop updated to support WM messages
 		while(unmapped?

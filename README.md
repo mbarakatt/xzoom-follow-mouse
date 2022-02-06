@@ -6,7 +6,8 @@ Works great with a window manager.
 # To build
 ```bash
 xmkmf # provided by the imake package of arch-linux
-make
+sudo make install
+sudo make install.man
 ```
 
 # Sources:
